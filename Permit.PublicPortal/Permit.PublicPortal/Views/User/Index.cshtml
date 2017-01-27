@@ -1,0 +1,28 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_RootLayout.cshtml";
+}
+
+<article id="content" role="article">
+    <div class="content">
+        <div class="static-content">
+            <div id="profile">
+                <div class="container landingpageContainerdiv">
+                    <h2></h2>
+
+                    @*<button type="button" class="btn btn-default" id="btnModalCancelAddCard"  onclick="return CancelAddCard()">Close</button>*@
+                    @*<button type="button" style="width:200px;height:70px;" class="btn btn-info">Purchase New Permit</button>*@
+                    @Html.ActionLink("Purchase New Permit", "Purchasenewpermit", "PurchasePermit", null, new { @class = "text-center btn btn-info landingpageactionlink", @id = "btnModalCancelAddCard", @style = "padding-top: 24px;" })
+                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                    @Html.ActionLink("Purchase New Permit", "PurmitHistoryscreen", "PurchasePermit", null, new { @class = "text-center btn btn-warning  landingpageactionlink", @id = "btnModalCancelAddCard", @style = "padding-top: 24px;" })
+                    @*<button type="button" class="btn btn-warning landingpageactionlink">View Permit History</button>*@
+                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                    <button type="button" class="btn btn-danger landingpageactionlink">Edit Credit Card On File</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</article>
+

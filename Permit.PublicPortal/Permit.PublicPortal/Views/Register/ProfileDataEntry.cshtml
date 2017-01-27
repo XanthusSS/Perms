@@ -1,0 +1,167 @@
+﻿<script src="~/inc/js/profileDataEntryFunctions.js" type="text/javascript"></script>
+
+
+@using (Html.BeginForm("", "", FormMethod.Post, new { @class = "form cols", role = "form" }))
+{
+
+    @Html.AntiForgeryToken()
+
+    <div class="wrapper">
+
+        @Html.ValidationSummary(false, "Please correct these errors:", new { @class = "alert alert-danger" })
+        <span id="profileAsyncFailure" class="alert alert-danger">
+            An error occured while logging in, please try again!
+        </span>
+
+
+        <table id="profileTable" class="table-responsive" cellpadding="6" cellspacing="6">
+
+          
+            <tr>
+                <td>
+
+                    <fieldset class="fieldsetProfileEdit">
+
+                        <table class="dataEntryTable table table-responsive" cellpadding="2" cellspacing="2">
+                            <tr>
+                                <td colspan="5">
+                                    <h1><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;<span class="sectionHeading">User Information</span></h1>
+                                    <hr />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col1">@Html.Label("First") @*<span class="requiredFieldIndicator">*</span>:*@</td>
+                                <td class="col2">@Html.Editor("FirstName", null, new { htmlAttributes = new { @class = "form-control  col-lg-10", placeholder = "First Name", @required = "required" } })</td>
+                                <td class="col3">@Html.Label("Last")@*<span class="requiredFieldIndicator">*</span>:*@</td>
+                                <td class="col4">@Html.Editor("LastName", null, new { htmlAttributes = new { @class = "form-control  col-lg-10", placeholder = "Last Name", @required = "required" } })</td>
+                                <td class="col5"></td>
+                            </tr>
+                            <tr>
+                                <td class="col1">@Html.Label("Email")@*<span class="requiredFieldIndicator">*</span>:*@</td>
+                                <td class="col2">@Html.Editor("Email", null, new { htmlAttributes = new { @class = "form-control  col-lg-10 ", placeholder = "Email Address", @required = "required", @onchange = "ConfirmEmail();", @type = "email" } })</td>
+                                <td class="col3">@Html.Label("Confirm")@*<span class="requiredFieldIndicator">*</span>:*@</td>
+                                <td class="col4">@Html.Editor("Confirm", null, new { htmlAttributes = new { @class = "form-control  col-lg-10", placeholder = "Email Confirmation", @required = "required", @type = "email", @onchange = "ConfirmEmail();" } })</td>
+                                <td class="col5"></td>
+                            </tr>
+                            <tr>
+                                <td class="col1">@Html.Label("Mobile")@*<span class="requiredFieldIndicator">*</span>:*@</td>
+                                <td class="col2">@Html.Editor("Mobile", null, new { htmlAttributes = new { @class = "form-control  col-lg-10", onkeydown = "return ValidateNumber(event);", placeholder = "(XXX)XXX-XXXX", @required = "required", maxlength = "10" } })</td>
+                                <td class="col3">@Html.Label("Network")</td>
+                                <td class="col4">  @Html.DropDownList("Network", new SelectList(new[] { "Select", "Verizon" }), new { @class = "form-control  col-lg-10" }) </td>
+                                <td class="col5"></td>
+                            </tr>
+                        </table>
+
+                        <br />
+
+                        <h1><span class="glyphicon glyphicon-credit-card"></span>&nbsp;&nbsp;<span class="sectionHeading creditCardHeading">Credit Card(s)</span><img id="creditCardFAQ" width="20" height="20" class="iconButton iconTextLineAlignment" onclick="ShowCreditCardFAQ()" data-toggle="tooltip" src="~/elements/skin/question.png" alt="Credit Card FAQ" /></h1>
+                        <hr />
+
+
+                        <div id="cardItems">
+
+                            <div id="addCardItem" onclick="return ShowAddCreditCard()">
+                                <span id="addCardHeader">
+                                    <span class="glyphicon glyphicon-plus-sign"></span>&nbsp;&nbsp;ADD CARD
+                                </span>
+                            </div>
+
+
+                            <div class="cardItem">
+
+
+                            </div>
+                        </div>
+
+                        <br />
+
+
+                        <h1><span class="glyphicon glyphicon-bed"></span>&nbsp;&nbsp;<span class="sectionHeading vehicleHeading">Vehicle(s)</span><img id="vehicleFAQ" width="20" height="20" class="iconButton iconTextLineAlignment" onclick="ShowVehicleFAQ()" data-toggle="tooltip" src="~/elements/skin/question.png" alt="Vehicle FAQ" /></h1>
+                        <hr />
+
+                        <div id="vehicleItems">
+
+
+                            <div id="addVehicleItem" onclick="return ShowAddVehicle()">
+                                <span id="addVehicleHeader">
+                                    <span class="glyphicon glyphicon-plus-sign"></span>&nbsp;&nbsp;ADD VEHICLE
+                                </span>
+                            </div>
+                        </div>
+
+                        <br />
+
+                    </fieldset>
+
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <fieldset>
+
+                        <table class="dataEntryTable table-responsive" cellpadding="2" cellspacing="2">
+                            <tr>
+                                <td>
+                                    <h1><span class="glyphicon glyphicon-envelope"></span>&nbsp;&nbsp;<span class="sectionHeading">Email Options</span></h1>
+                                    <hr />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+
+                                    <span id="emailOptionsMessageContainer">
+                                        @Html.CheckBox("Check box")
+                                        <span id="emailOptionsMessage">Opt in to receive automatic email receipts.</span>
+                                    </span>
+
+                                </td>
+                            </tr>
+                        </table>
+
+                    </fieldset>
+                </td>
+            </tr>
+        
+                <tr>
+                    <td>
+                        <fieldset>
+
+                            <table class="dataEntryTable table-responsive"  cellpadding="2" cellspacing="2">
+                                <tr>
+                                    <td>
+                                        <h1><span class="glyphicon glyphicon-list-alt"></span>&nbsp;&nbsp;<span class="sectionHeading">Terms & Conditions</span></h1>
+                                        <hr />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td id="TermsAndConditionsAgreedColumn">
+                                        <span id="termsAndConditionsMessageContainer">
+                                            @Html.CheckBox("Checkbox")
+                                            <span id="termsAndConditionsMessage">I have read/agree with the <a href="#" onclick="return ShowTermsAndConditions()">terms and conditions</a>.</span>
+                                        </span>
+
+                                    </td>
+                                </tr>
+                            </table>
+                        </fieldset>
+                    </td>
+                </tr>
+
+            <tr>
+                <td>
+                    <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI" style="margin-bottom:20px"></div>
+
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <button type="submit" id="submitButton" class="submit-register"><span id="registerAccountText"><img src="~/elements/loader.gif" id="registerAccountLoading" height="25" width="25" />Register</span></button>
+                </td>
+            </tr>
+
+        </table>
+    </div>
+
+
+                                            }

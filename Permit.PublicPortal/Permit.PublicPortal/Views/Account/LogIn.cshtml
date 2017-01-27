@@ -1,0 +1,25 @@
+﻿@model Permits.DataAccess.Managers.UserLoginView
+@{
+    ViewBag.Title = "LogIn";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script>
+
+    $(document).ready(function () {
+
+        $("#loginLink").parent().addClass("currentPage");
+
+    });
+
+</script>
+<div>
+
+    <article id="content" role="article">
+        <div id="login">
+
+            @Html.Partial("LoginDataEntry")
+
+        </div>
+    </article>
+
+</div>

@@ -1,0 +1,746 @@
+﻿@model RegisterViewModel
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<script>
+
+    $(document).ready(function () {
+        $("#loginLinkk").parent().addClass("currentPage");
+    });
+
+</script>
+<article id="content" role="article">
+    <div class="content">
+        <div class="static-content">
+            <div id="profile">
+                @using (Html.BeginForm("Create", "Register", FormMethod.Post, new { @class = "form cols", role = "form" }))
+                {
+
+                    @Html.AntiForgeryToken()
+
+                    <div class="wrapper">
+
+                        @Html.ValidationSummary(false, "Please correct these errors:", new { @class = "alert alert-danger" })
+                        <span id="profileAsyncFailure" class="alert alert-danger hidden">
+                            An error occured while logging in, please try again!
+                        </span>
+                        <table id="profileTable" class="table-responsive" cellpadding="6" cellspacing="6">
+                            <tr>
+                                <td>
+
+                                    <fieldset class="fieldsetProfileEdit">
+
+                                        <table class="dataEntryTable table table-responsive" cellpadding="2" cellspacing="2">
+                                            <tr>
+                                                <td colspan="5">
+                                                    <h1><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;<span class="sectionHeading">User Information</span></h1>
+                                                    <hr />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="col1">@Html.Label("First") @*<span class="requiredFieldIndicator">*</span>:*@</td>
+                                                <td class="col2">@Html.EditorFor(model =>model.User.FirstName, new { htmlAttributes = new { @class = "form-control  col-lg-10", placeholder = "First Name", @required = "required" } })</td>
+                                                <td class="col3">@Html.Label("Last")@*<span class="requiredFieldIndicator">*</span>:*@</td>
+                                                <td class="col4">@Html.EditorFor(model => model.User.LastName, new { htmlAttributes = new { @class = "form-control  col-lg-10", placeholder = "Last Name", @required = "required" } })</td>
+                                                <td class="col5"></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="col1">@Html.Label("Email")@*<span class="requiredFieldIndicator">*</span>:*@</td>
+                                                <td class="col2">@Html.EditorFor(model => model.User.EmailAddress, new { htmlAttributes = new { @class = "form-control  col-lg-10 ", placeholder = "Email Address", @required = "required", @onchange = "ConfirmEmail();", @type = "email" } })</td>
+                                                <td class="col3">@Html.Label("Confirm")@*<span class="requiredFieldIndicator">*</span>:*@</td>
+                                                <td class="col4">@Html.EditorFor(model => model.User.ConfirmEmail, new { htmlAttributes = new { @class = "form-control  col-lg-10", placeholder = "Email Confirmation", @required = "required", @type = "email", @onchange = "ConfirmEmail();" } })</td>
+                                                <td class="col5"></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="col1">@Html.Label("Mobile")@*<span class="requiredFieldIndicator">*</span>:*@</td>
+                                                <td class="col2">@Html.Editor("Mobile", null, new { htmlAttributes = new { @class = "form-control  col-lg-10", onkeydown = "return ValidateNumber(event);", placeholder = "(XXX)XXX-XXXX",  maxlength = "10" } })</td>
+                                                <td class="col3">@Html.Label("Network")</td>
+                                                <td class="col4">  @Html.DropDownList("Network", new SelectList(new[] { "Select", "Verizon" }), new { @class = "form-control  col-lg-10" }) </td>
+                                                <td class="col5"></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="col1">@Html.Label("Password")@*<span class="requiredFieldIndicator">*</span>:*@</td>
+                                                <td class="col2">@Html.PasswordFor(model => model.User.Password, new { @class = "form-control  col-lg-10", placeholder = "Password", @required = "required" })</td>
+                                                <td class="col3">@Html.Label("Confirm")</td>
+                                                <td class="col4">@Html.Password("ConfirmPassword",null,new { @class = "form-control  col-lg-10", placeholder = "Confirm Password", @required = "required" }) </td>
+                                                <td class="col5"></td>
+                                            </tr>
+
+                                        </table>
+
+                                        <br />
+
+                                        <h1><span class="glyphicon glyphicon-credit-card"></span>&nbsp;&nbsp;<span class="sectionHeading creditCardHeading">Credit Card(s)</span><img id="creditCardFAQ" width="20" height="20" class="iconButton iconTextLineAlignment" onclick="ShowCreditCardFAQ()" data-toggle="tooltip" src="~/elements/skin/question.png" alt="Credit Card FAQ" /></h1>
+                                        <hr />
+
+
+                                        <div id="cardItems">
+
+                                            <div id="addCardItem" onclick="return ShowAddCreditCard()">
+                                                <span id="addCardHeader">
+                                                    <span class="glyphicon glyphicon-plus-sign"></span>&nbsp;&nbsp;ADD CARD
+                                                </span>
+                                            </div>
+
+
+                                            <div class="cardItem">                                              
+                                                
+
+                                            </div>
+                                        </div>
+
+                                        <br />
+
+
+                                        <h1><span class="glyphicon glyphicon-bed"></span>&nbsp;&nbsp;<span class="sectionHeading vehicleHeading">Vehicle(s)</span><img id="vehicleFAQ" width="20" height="20" class="iconButton iconTextLineAlignment" onclick="ShowVehicleFAQ()" data-toggle="tooltip" src="~/elements/skin/question.png" alt="Vehicle FAQ" /></h1>
+                                        <hr />
+
+                                        <div id="vehicleItems">
+
+
+                                            <div id="addVehicleItem" onclick="return ShowAddVehicle()">
+                                                <span id="addVehicleHeader">
+                                                    <span class="glyphicon glyphicon-plus-sign"></span>&nbsp;&nbsp;ADD VEHICLE
+                                                </span>
+                                            </div>
+                                        </div>
+                                      
+                                        <br />
+
+                                    </fieldset>
+
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <fieldset>
+
+                                        <table class="dataEntryTable table-responsive" cellpadding="2" cellspacing="2">
+                                            <tr>
+                                                <td>
+                                                    <h1><span class="glyphicon glyphicon-envelope"></span>&nbsp;&nbsp;<span class="sectionHeading">Email Options</span></h1>
+                                                    <hr />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+
+                                                    <span id="emailOptionsMessageContainer">
+                                                        @Html.CheckBoxFor(model => model.User.EmailOption, new { @checked = "checked" })
+                                                        <span id="emailOptionsMessage">Opt in to receive automatic email receipts.</span>
+                                                    </span>
+
+                                                </td>
+                                            </tr>
+                                        </table>
+
+                                    </fieldset>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <fieldset>
+
+                                        <table class="dataEntryTable table-responsive" cellpadding="2" cellspacing="2">
+                                            <tr>
+                                                <td>
+                                                    <h1><span class="glyphicon glyphicon-list-alt"></span>&nbsp;&nbsp;<span class="sectionHeading">Terms & Conditions</span></h1>
+                                                    <hr />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td id="TermsAndConditionsAgreedColumn">
+                                                    <span id="termsAndConditionsMessageContainer">
+                                                        @Html.CheckBox("Checkbox")
+                                                        <span id="termsAndConditionsMessage">I have read/agree with the <a href="#" onclick="return ShowTermsAndConditions()">terms and conditions</a>.</span>
+                                                    </span>
+
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </fieldset>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI" style="margin-bottom:20px"></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    @*<input type="submit" id="submitButton" class="submit-register"><span id="registerAccountText"><img src="~/elements/loader.gif" id="registerAccountLoading" height="25" width="25" />Register</span></input>*@
+                                    <input type="submit" class="submit-register" value="Register" />
+                                </td>
+                            </tr>
+
+                        </table>
+
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</article>
+
+@section scripts{
+    @*<script src="~/inc/js/profileDataEntryFunctions.js" type="text/javascript"></script>*@
+    <script type="text/javascript">
+        //Card Js start
+        var unMaskedCardValue = "";
+        function ShowAddCreditCard() {
+            CardNumberChanged($("#txtAddNewCardNumber"));
+            MaskCreditCardNumbers($("#txtAddNewCardNumber"));
+            $("#addCreditCardInfo").modal('show');
+            return false;
+        }
+        function CardNumberChanged($txtCardNumber) {
+
+            if ($txtCardNumber.val().length > 1) {
+
+                var cardType = GetCardType($txtCardNumber.val());
+
+                $txtCardNumber.removeClass("textBoxVisaLogo");
+                $txtCardNumber.removeClass("textBoxMasterCardLogo");
+                $txtCardNumber.removeClass("textBoxDiscoverLogo");
+                $txtCardNumber.removeClass("textBoxAmExLogo");
+
+                if (cardType == "VISA") {
+                    $txtCardNumber.addClass("textBoxVisaLogo");
+                } else if (cardType == "MASTERCARD") {
+                    $txtCardNumber.addClass("textBoxMasterCardLogo");
+                } else if (cardType == "AMEX") {
+                    $txtCardNumber.addClass("textBoxAmExLogo");
+                } else if (cardType == "DISCOVER") {
+                    $txtCardNumber.addClass("textBoxDiscoverLogo");
+                }
+
+            } else {
+
+                $txtCardNumber.removeClass("textBoxVisaLogo");
+                $txtCardNumber.removeClass("textBoxMasterCardLogo");
+                $txtCardNumber.removeClass("textBoxDiscoverLogo");
+                $txtCardNumber.removeClass("textBoxAmExLogo");
+
+            }
+
+        }
+
+        function AddCard() {
+
+            $("#btnModalAddCard").prop("disabled", true);
+            $("#btnModalCancelAddCard").prop("disabled", true);
+
+            var arrErrors = ValidateCard($("#txtAddNewCardNumber"),
+                                         $("#SelectedNewCardExpMonth"),
+                                         $("#SelectedNewCardExpYear"),
+                                         $("#txtAddNewCardZipCode")                                         
+                                         );
+
+            if (arrErrors.length == 0) {
+                var formattedCardValue = unMaskedCardValue.split(' ').join('');
+                formattedCardValue = formattedCardValue.split('-').join('');
+                var formattedYear = $("#SelectedNewCardExpYear").val();
+                formattedYear = formattedYear.substring(2, 4);
+                var $form = $('#ProfileEditorForm');
+                var token = $('input[name="__RequestVerificationToken"]', $form).val();
+                var card = {
+                    __RequestVerificationToken: token,
+                    CardId: ((new Date()).getUTCMilliseconds() * -1),
+                    CardNumber: formattedCardValue,
+                    CardExpiryMonth: $("#SelectedNewCardExpMonth").val(),
+                    CardExpiryYear: formattedYear,
+                    CardZipCode: $("#txtAddNewCardZipCode").val(),
+                    CardAlias: $("#txtAddNewCardAlias").val(),
+                    CardType: GetCardType(formattedCardValue)
+                };
+
+                AddCardItem(card);
+
+            } else {
+
+                $(".alert-success").hide();
+
+                var errorMessage = "Unable to add card due to the following errors:";
+                errorMessage += "<ul>"
+                for (i = 0; i < arrErrors.length; i++) {
+                    errorMessage += "<li>" + arrErrors[i] + "</li>";
+                }
+                errorMessage += "</ul>"
+
+                $("#addNewCardValidationSummary").html(errorMessage);
+                $("#addNewCardValidationSummary").show();
+
+                $("#btnModalAddCard").prop("disabled", false);
+                $("#btnModalCancelAddCard").prop("disabled", false);
+
+            }
+
+            return false;
+
+        }
+
+        function ValidateCard($txtCurrentCardNumber,
+                       $selectedCardExpMonth,
+                       $selectedCardExpYear,
+                       $txtCurrentCardZipCode
+                       ) {
+
+            var arrErrors = new Array();
+            unMaskedCardValue = $txtCurrentCardNumber.val();
+            var formattedCardValue = unMaskedCardValue.split(' ').join('');
+            formattedCardValue = formattedCardValue.split('-').join('');
+
+            if ($txtCurrentCardNumber.length < 1 || $txtCurrentCardNumber.length > 100) {
+
+                arrErrors[arrErrors.length] = "Card number is required."
+                $txtCurrentCardNumber.addClass("input-validation-error");
+
+            } else {
+
+
+                var formattedCardValue = unMaskedCardValue.split(' ').join('');
+                formattedCardValue = formattedCardValue.split('-').join('');
+
+                if (!isNumeric(formattedCardValue)) {
+
+                    arrErrors[arrErrors.length] = "Card number must be numeric."
+                    $txtCurrentCardNumber.addClass("input-validation-error");
+
+                }
+                else {
+
+                    if (!valid_credit_card(unMaskedCardValue)) {
+
+                        arrErrors[arrErrors.length] = "Card number is not valid."
+                        $txtCurrentCardNumber.addClass("input-validation-error");
+
+                    }
+                    else {
+
+                        $txtCurrentCardNumber.removeClass("input-validation-error");
+
+                    }
+
+                }
+
+            }
+
+            var temp = $selectedCardExpMonth.val();
+            if ($selectedCardExpMonth.val() == "MM") {
+
+                arrErrors[arrErrors.length] = "Card expiration month is required to be set."
+                $selectedCardExpMonth.addClass("input-validation-error");
+
+            } else {
+
+                $selectedCardExpMonth.removeClass("input-validation-error");
+
+            }
+
+            if ($selectedCardExpYear.val() == "YYYY") {
+
+                arrErrors[arrErrors.length] = "Card expiration year is required to be set."
+                $selectedCardExpYear.addClass("input-validation-error");
+
+            } else {
+
+                $selectedCardExpYear.removeClass("input-validation-error");
+
+            }
+
+            if ($txtCurrentCardZipCode.val() != "") {
+
+                var zipCodeRegEx = /^\d{5}(?:[-\s]\d{4})?$/;
+                if (zipCodeRegEx.test($txtCurrentCardZipCode.val())) {
+
+                    $txtCurrentCardZipCode.removeClass("input-validation-error");
+
+                } else {
+
+                    arrErrors[arrErrors.length] = "Zip code is not valid."
+                    $txtCurrentCardZipCode.addClass("input-validation-error");
+
+                }
+
+            } else {
+
+                arrErrors[arrErrors.length] = "Zip code is required."
+                $txtCurrentCardZipCode.addClass("input-validation-error");
+
+            }
+
+            return arrErrors;
+
+        }
+
+        function AddCardItem(card) {
+            
+            var cardImageTag = GetCardImageLogo(card.CardType);
+
+            var formattedCardNumber = card.CardNumber.substring(0, 6) + '....' + card.CardNumber.substring((card.CardNumber.length) - 4)
+
+            var strBackgroundClass = "background";
+            if (card.CardType == "VISA") {
+                strBackgroundClass = "backgroundVisa";
+            }
+            else if (card.CardType == "MASTERCARD") {
+                strBackgroundClass = "backgroundMastercard";
+            }
+            else if (card.CardType == "AMEX") {
+                strBackgroundClass = "backgroundAmEx";
+            }
+            else if (card.CardType == "DISCOVER") {
+                strBackgroundClass = "backgroundDiscover";
+            }
+
+            var cardItem = "";
+            cardItem += '<div class="cardItem">';
+            cardItem += '   <div class="cardContainer">';
+            cardItem += '       <div class="' + strBackgroundClass + '">';
+            cardItem += '           <div class="cardRemovedOverlay"><div class="cardRemovedMessage">REMOVED</div></div>';
+            cardItem += '           <table class="cardTable">';
+            cardItem += '               <tr>';
+            cardItem += '                   <td class="cardAlias">' + card.CardAlias + '</td>';
+            cardItem += '                   <td class="cardDeleteButton"><span class="glyphicon glyphicon-remove" style="font-size: 1.2em; cursor: pointer;" onclick="RemoveCard(\'' + card.CardId + '\', this)"></span></td>';
+            cardItem += '               </tr>';
+            cardItem += '               <tr>';
+            cardItem += '                   <td colspan="2" class="cardIdentificationNumber">' + formattedCardNumber + '</td>';
+            cardItem += '               </tr>';
+            cardItem += '               <tr>';
+            cardItem += '                   <td class="cardIdentificationExpiration"><span class="validThru">Valid Thru: </span>' + card.CardExpiryMonth + '/' + card.CardExpiryYear + '</td>';
+            cardItem += '                   <td class="cardLogoContainer">';
+            cardItem += '                       ' + cardImageTag;
+            cardItem += '                   </td>';
+            cardItem += '               </tr>';
+            cardItem += '           </table>';
+            cardItem += '       </div>';
+            cardItem += '   </div>';
+            cardItem += '</div>';
+
+            $(cardItem).hide().insertAfter($("#addCardItem")).fadeIn(3000);
+
+        }
+
+        function GetCardImageLogo(CardType) {
+
+            var cardImageTag = "";
+            if (CardType == "VISA") {
+                cardImageTag = '<div class="visaLogoCardItemContainer"><div class="visaLogo cardLogo"></div></div>';
+            } else if (CardType == "MASTERCARD") {
+                cardImageTag = '<div class="masterCardLogoCardItemContainer"><div class="masterCardLogo cardLogo"></div></div>';
+            } else if (CardType == "AMEX") {
+                cardImageTag = '<div class="amexLogoCardItemContainer"><div class="amexLogo cardLogo"></div></div>';
+            } else if (CardType == "DISCOVER") {
+                cardImageTag = '<div class="discoverLogoCardItemContainer"><div class="discoverLogo cardLogo"></div></div>';
+            } else {
+                cardImageTag = '&nbsp;'
+            }
+
+            return cardImageTag;
+
+        }
+        function GetCardType(cardNumberValue) {
+
+            var cardTypeValue = "";
+
+            if (cardNumberValue.substring(0, 1) == "4") {
+                cardTypeValue = "VISA";
+            } else if (cardNumberValue.substring(0, 1) == "5") {
+                cardTypeValue = "MASTERCARD";
+            } else if (cardNumberValue.substring(0, 2) == "37" || cardNumberValue.substring(0, 2) == "34") {
+                cardTypeValue = "AMEX";
+            } else if (cardNumberValue.substring(0, 2) == "60" || cardNumberValue.substring(0, 2) == "62") {
+                cardTypeValue = "DISCOVER";
+            } else {
+                cardTypeValue = "OTHER";
+            }
+
+            return cardTypeValue;
+
+        }
+
+        function MaskCreditCardNumbers($txtCardNumber) {
+
+            $txtCardNumber.focusin(function () {
+                var displayMasked = $(this).val();
+                displayMasked = displayMasked.substr(0, displayMasked.length - 4) + unMaskedCardValue.substr(unMaskedCardValue.length - 4, 4);
+
+                $(this).val(displayMasked);
+            });
+            $txtCardNumber.focusout(function () {
+
+                var formattedCardValue = $(this).val().split(' ').join('');
+                formattedCardValue = formattedCardValue.split('-').join('');
+
+                var txtMask = "";
+                if (isNumeric(formattedCardValue)) {
+                    unMaskedCardValue = $(this).val();
+                    for (var i = 0; i < unMaskedCardValue.length; i++) {
+                        txtMask += "X";
+                    }
+                    $(this).val(txtMask);
+                } else {
+                    var tempCardValue = $(this).val();
+                    for (var i = 0; i < tempCardValue.length; i++) {
+                        txtMask += "X";
+                    }
+                    $(this).val(txtMask);
+                }
+
+            });
+
+        }
+
+        function ClearMaskCreditCardNumbers($txtCardNumber) {
+
+            $txtCardNumber.off("focusout");
+            $txtCardNumber.off("focusin");
+            unMaskedCardValue = "";
+
+        }
+
+        function isNumeric(n) {
+            return !isNaN(parseFloat(n)) && isFinite(n);
+        }
+
+        // takes the form field value and returns true on valid number
+        function valid_credit_card(value) {
+            // accept only digits, dashes or spaces
+            if (/[^0-9-\s]+/.test(value)) return false;
+
+            // The Luhn Algorithm. It's so pretty.
+            var nCheck = 0, nDigit = 0, bEven = false;
+            value = value.replace(/\D/g, "");
+
+            for (var n = value.length - 1; n >= 0; n--) {
+                var cDigit = value.charAt(n),
+                      nDigit = parseInt(cDigit, 10);
+
+                if (bEven) {
+                    if ((nDigit *= 2) > 9) nDigit -= 9;
+                }
+
+                nCheck += nDigit;
+                bEven = !bEven;
+            }
+
+            return (nCheck % 10) == 0;
+        }
+        //Card Js End
+    </script>
+    <script type="text/javascript">
+        //Vehicle Js start
+        function ShowAddVehicle() {
+            $("#addVehicleInfo").modal('show');
+            return false;
+        }
+
+
+        function AddVehicle() {
+
+            $("#btnModalAddVehicle").prop("disabled", true);
+            $("#btnModalCancelAddVehicle").prop("disabled", true);
+
+            var arrErrors = ValidateVehicle($("#txtAddNewVehicleMake"),
+                                            $("#txtAddNewVehicleModel"),
+                                            $("#txtAddNewVehicleColor"),
+                                            $("#txtAddNewVehicleYear"),
+                                            $("#txtAddNewVehicleLicensePlate"),
+                                            $("#NewVehicleSelectedState"));
+
+            if (arrErrors.length == 0) {
+
+                var $form = $('#ProfileEditorForm');
+                var token = $('input[name="__RequestVerificationToken"]', $form).val();
+                var vehicle = {
+                    __RequestVerificationToken: token,
+                    CarId: ((new Date()).getUTCMilliseconds() * -1),
+                    CarMake: $("#txtAddNewVehicleMake").val(),
+                    CarModel: $("#txtAddNewVehicleModel").val(),
+                    CarColor: $("#txtAddNewVehicleColor").val(),
+                    CarYear: $("#txtAddNewVehicleYear").val(),
+                    CarLicense: $("#txtAddNewVehicleLicensePlate").val(),
+                    CarState: $("#NewVehicleSelectedState").val()
+                }
+                AddVehicleItem(vehicle);
+
+
+            } else {
+
+                $(".alert-success").hide();
+
+                var errorMessage = "Unable to add vehicle due to the following errors:";
+                errorMessage += "<ul>"
+                for (i = 0; i < arrErrors.length; i++) {
+                    errorMessage += "<li>" + arrErrors[i] + "</li>";
+                }
+                errorMessage += "</ul>"
+
+                $("#addNewVehicleValidationSummary").html(errorMessage);
+                $("#addNewVehicleValidationSummary").show();
+
+                $("#btnModalAddVehicle").prop("disabled", false);
+                $("#btnModalCancelAddVehicle").prop("disabled", false);
+
+            }
+
+            return false;
+
+        }
+
+        function ValidateVehicle($txtCurrentVehicleMake,
+                         $txtCurrentVehicleModel,
+                         $txtCurrentVehicleColor,
+                         $txtCurrentVehicleYear,
+                         $txtCurrentVehicleLicensePlate,
+                         $SelectedState) {
+
+            var arrErrors = new Array();
+
+            if ($txtCurrentVehicleMake.val().length < 1 || $txtCurrentVehicleMake.val().length > 50) {
+
+                arrErrors[arrErrors.length] = "Vehicle make is required."
+                $txtCurrentVehicleMake.addClass("input-validation-error");
+
+            } else {
+
+                $txtCurrentVehicleMake.removeClass("input-validation-error");
+
+            }
+
+            if ($txtCurrentVehicleModel.val().length < 1 || $txtCurrentVehicleModel.val().length > 50) {
+
+                arrErrors[arrErrors.length] = "Vehicle model is required."
+                $txtCurrentVehicleModel.addClass("input-validation-error");
+
+            } else {
+
+                $txtCurrentVehicleModel.removeClass("input-validation-error");
+
+            }
+
+            if ($txtCurrentVehicleColor.val().length < 1 || $txtCurrentVehicleColor.val().length > 50) {
+
+                arrErrors[arrErrors.length] = "Vehicle color is required."
+                $txtCurrentVehicleColor.addClass("input-validation-error");
+
+            } else {
+
+                $txtCurrentVehicleColor.removeClass("input-validation-error");
+
+            }
+
+            if ($txtCurrentVehicleYear.val().length > 0) {
+
+                if (!$.isNumeric($txtCurrentVehicleYear.val())) {
+
+                    arrErrors[arrErrors.length] = "Vehicle year must have a numeric value."
+                    $txtCurrentVehicleYear.addClass("input-validation-error");
+
+                } else {
+
+                    if ($txtCurrentVehicleYear.val().length != 4) {
+
+                        arrErrors[arrErrors.length] = "Vehicle year must be 4 numeric digits."
+                        $txtCurrentVehicleYear.addClass("input-validation-error");
+
+                    } else {
+
+                        $txtCurrentVehicleYear.removeClass("input-validation-error");
+
+                    }
+
+                }
+
+            }
+            else {
+
+                $txtCurrentVehicleYear.removeClass("input-validation-error");
+
+            }
+
+            if ($txtCurrentVehicleLicensePlate.val().length < 1 || $txtCurrentVehicleLicensePlate.val().length > 50) {
+
+                arrErrors[arrErrors.length] = "Vehicle license plate is required."
+                $txtCurrentVehicleLicensePlate.addClass("input-validation-error");
+
+            } else {
+
+                $txtCurrentVehicleLicensePlate.removeClass("input-validation-error");
+
+            }
+
+            if ($SelectedState.val() == "--Select--") {
+
+                arrErrors[arrErrors.length] = "Vehicle state is required."
+                $SelectedState.addClass("input-validation-error");
+
+            } else {
+
+                $SelectedState.removeClass("input-validation-error");
+
+            }
+
+            return arrErrors;
+
+        }
+
+
+
+        function AddVehicleItem(vehicle) {
+
+            var vehicleItem = CreateVehicleItem(vehicle);
+
+            $(vehicleItem).hide().insertAfter($("#addVehicleItem")).fadeIn(3000);
+            $("#btnModalAddVehicle").prop("disabled", false);
+            $("#btnModalCancelAddVehicle").prop("disabled", false);
+            $('#addVehicleInfo').find('form')[0].reset();
+            $('#addVehicleInfo').modal('hide');
+
+        }
+        var CarCount = 0;
+        function CreateVehicleItem(vehicle) {
+            var count = CarCount;
+            var vehicleItem = "";
+            vehicleItem += '<div data-carId="' + vehicle.CarID + '" class="vehicleItem">';
+            vehicleItem += '    <div class="vehicleContainer" onclick="EditVehicleItem(\'' + vehicle.CarID + '\', \'' + vehicle.CarColor + '\', \'' + vehicle.CarLicense + '\', \'' + vehicle.CarMake + '\', \'' + vehicle.CarModel + '\', \'' + vehicle.CarYear + '\', \'' + vehicle.CarState + '\')">';
+            vehicleItem += '        <div class="vehicleRemovedOverlay"><div class="vehicleRemovedMessage">REMOVED</div></div>';
+            vehicleItem += '        <table class="vehicleTable">';
+            vehicleItem += '            <tr>';
+            vehicleItem += '                <td colspan="2" class="vehicleDeleteButton"><span class="glyphicon glyphicon-remove" style="font-size: 1.2em; cursor: pointer;" onclick="RemoveVehicle(\'Vehicle:' + vehicle.CarId + '\', this)"></span></td>';
+            vehicleItem += '            </tr>';
+            vehicleItem += '            <tr>';
+            vehicleItem += '                <td colspan="2" class="vehicleIdentificationNumber">' + vehicle.CarLicense + '</td>';
+            vehicleItem += '            </tr>';
+            vehicleItem += '            <tr>';
+            vehicleItem += '                <td class="vehicleMake">' + vehicle.CarMake + '</td>';
+            vehicleItem += '                <td class="vehicleModel">' + vehicle.CarModel + '</td>';
+            vehicleItem += '            </tr>';
+            vehicleItem += '            <tr>';
+            vehicleItem += '                <td colspan="2" class="vehicleState">' + vehicle.CarState + '</td>';
+            vehicleItem += '            </tr>';
+            vehicleItem += '        </table>';
+            vehicleItem += '    </div>';
+            vehicleItem += '</div>';
+            vehicleItem += '<div>';
+            vehicleItem += "<input type='hidden' name='Car[" + count + "].CarColor' value ='" + vehicle.CarColor + "'/>";
+            vehicleItem += "<input type='hidden' name='Car[" + count + "].CarLicense' value ='" + vehicle.CarLicense + "' />";
+            vehicleItem += "<input type='hidden' name='Car[" + count + "].CarMake' value ='" + vehicle.CarMake + "'/>";
+            vehicleItem += "<input type='hidden' name='Car[" + count + "].CarModel' value ='" + vehicle.CarModel + "'/>";
+            vehicleItem += "<input type='hidden' name='Car[" + count + "].CarState' value ='" + vehicle.CarState + "'/>";
+            vehicleItem += "<input type='hidden' name='Car[" + count + "].CarYear' value ='" + vehicle.CarYear + "'/>";
+            
+            vehicleItem +=   '</div>';
+            CarCount++;
+            return vehicleItem;
+
+        }
+        //vehicle Js End
+    </script>
+}

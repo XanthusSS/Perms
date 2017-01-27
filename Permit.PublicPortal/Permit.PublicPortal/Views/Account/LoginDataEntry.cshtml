@@ -1,0 +1,107 @@
+﻿@model Permits.DataAccess.Managers.UserLoginView
+<script>
+
+        $(document).ready(function () {
+
+            $("#loginAsyncFailure").hide();
+
+        });
+
+        function OnSuccess(data) {
+            if (data.RedirectUrl) {
+                window.location.href = data.RedirectUrl;
+            }
+            $("#loginAsyncFailure").hide();
+            CloseAsyncUI();
+        }
+
+        function OnFailure(error) {
+
+            $("#loginAsyncFailure").show();
+            CloseAsyncUI();
+
+        }
+
+        function InitAsyncUI() {
+
+            ShowLoadingPanel();
+            $("#loginLoading").css("visibility", "visible");
+
+        }
+
+        function CloseAsyncUI() {
+
+            HideLoadingPanel();
+            $("#loginLoading").css("visibility", "hidden");
+
+        }
+
+</script>
+
+@using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form cols", role = "form" }))
+{
+
+    <h1></h1>
+
+    @Html.AntiForgeryToken()
+
+    <div class="col-1-2 step-one">
+        @*style="margin-left: 230px"*@
+        @Html.ValidationSummary(false, "Please correct these errors:", new { @class = "alert alert-danger" })
+        <span id="loginAsyncFailure" class="alert alert-danger">
+            An error occured while logging in, please try again!
+        </span>
+
+        <div class="cols">
+            <div class="col-1-2">
+                <div class="field-container">
+                    @Html.Label("User Name")
+                    @Html.EditorFor(m => m.LoginName, new { htmlAttributes = new { @class = "form-control  col-lg-10", placeholder = "User Name", @required = "required" } })
+                    @Html.ValidationMessageFor(m => m.LoginName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="col-1-2">
+                <div class="field-container">
+                    @Html.Label("Password")
+                    @Html.EditorFor(m => m.Password, new { htmlAttributes = new { @class = "form-control  col-lg-10", placeholder = "Password", @required = "required" } })
+                    @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+        <br />
+        <table id="loginTable" cellpadding="4" cellspacing="4">
+            <tr>
+                <td class="col1">
+                    @Html.CheckBoxFor(m => m.RememberMe)
+                </td>
+                <td class="col2">
+                    @Html.Label("RememberMe")
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    @Html.ActionLink("Forgot Password", "ForgotPassword", "Account", null, new { @style = "color:white" })
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    @Html.ActionLink("Register New Account", "Index", "Profile", null, new { @style = "color:white" })
+                </td>
+            </tr>
+            @*<tr>
+                    <td colspan="2" id="submitWrapper"></td>
+                </tr>*@
+        </table>
+
+        @*<div>@Html.Recaptcha(theme: CaptchaTheme.Dark)</div>*@
+        <div id="submitWrapper">
+            <button type="submit" class="submit-login"><span id="loginText">@*<img src="~/elements/loader.gif" id="loginLoading" height="25" width="25" />*@Login</span></button>
+            @*<input type="submit" class="submit-login" value="Login" />*@
+        </div>
+
+    </div>
+
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
